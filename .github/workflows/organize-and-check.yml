@@ -1,0 +1,67 @@
+name: Organize and Check Files
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  organize-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Organize files into correct structure
+        run: |
+          # Create necessary directories
+          mkdir -p src/components src/context src/hooks public
+
+          # Move files to appropriate directories
+          mv main.jsx src/ 2>/dev/null || echo "main.jsx already moved or missing"
+          mv App.jsx src/ 2>/dev/null || echo "App.jsx already moved or missing"
+          mv App.css src/ 2>/dev/null || echo "App.css already moved or missing"
+          mv components/* src/components/ 2>/dev/null || echo "Components already moved or missing"
+          mv context/* src/context/ 2>/dev/null || echo "Context already moved or missing"
+          mv hooks/* src/hooks/ 2>/dev/null || echo "Hooks already moved or missing"
+          mv index.html public/ 2>/dev/null || echo "index.html already moved or missing"
+          mv manifest.json public/ 2>/dev/null || echo "manifest.json already moved or missing"
+          mv robots.txt public/ 2>/dev/null || echo "robots.txt already moved or missing"
+          mv sitemap.xml public/ 2>/dev/null || echo "sitemap.xml already moved or missing"
+
+          # Commit changes if any
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions"
+            git config user.email "actions@github.com"
+            git add .
+            git commit -m "Auto-organize files into src/ and public/"
+            git push
+          fi
+
+      - name: Verify file structure and completeness
+        run: |
+          # Check for required files
+          required_files=("src/main.jsx" "src/App.jsx" "src/App.css" "src/components/Hero.jsx" "src/components/Services.jsx" "src/components/About.jsx" "src/components/Portfolio.jsx" "src/components/Blog.jsx" "src/components/Contact.jsx" "src/components/AIChatbot.jsx" "src/components/Legal.jsx" "src/components/CookieBanner.jsx" "src/context/DarkModeContext.jsx" "src/hooks/useDarkMode.js" "public/index.html" "public/manifest.json" "public/robots.txt" "public/sitemap.xml" "package.json" "vite.config.js")
+          missing_files=()
+
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              missing_files+=("$file")
+            fi
+          done
+
+          if [ ${#missing_files[@]} -eq 0 ]; then
+            echo "All required files are present and correctly organized!"
+          else
+            echo "Missing files: ${missing_files[@]}"
+            exit 1
+          fi
+
+      - name: Notify on completion
+        if: success()
+        run: echo "File organization and check completed successfully. Ready for deployment!"
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "File organization or check failed. Please review missing files and re-upload."
