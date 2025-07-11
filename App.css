@@ -1,0 +1,122 @@
+:root {
+  --primary: #003366;
+  --accent: #D4AF37;
+  --glow: rgba(212, 175, 55, 0.5);
+  --neutral: #F5F5F5;
+  --text: #333333;
+  --secondary: #90EE90;
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  background: var(--neutral);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+.dark-mode {
+  background: #121212;
+  color: #fff;
+  --neutral: #121212;
+  --text: #fff;
+  --accent: #FFD700;
+}
+
+section {
+  padding: 4rem 2rem;
+  min-height: 100vh;
+}
+
+.hero {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 20% 0 20% 0;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+}
+
+.hero-content {
+  max-width: 800px;
+}
+
+.cta-button {
+  background: var(--accent);
+  color: var(--neutral);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.cta-button:hover {
+  box-shadow: 0 0 15px var(--glow);
+  transform: translateY(-2px);
+}
+
+.card {
+  background: var(--neutral);
+  padding: 1rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 0 10px 20px var(--glow);
+}
+
+.navbar, footer {
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(10px);
+  padding: 1rem 2rem;
+}
+
+.navbar {
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+}
+
+.nav-links a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
+
+footer {
+  background: var(--primary);
+  color: var(--neutral);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: var(--neutral);
+    display: none;
+  }
+  .nav-links.active {
+    display: flex;
+  }
+}
